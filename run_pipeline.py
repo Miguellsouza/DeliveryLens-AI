@@ -7,7 +7,7 @@ todas_avaliacoes = []
 
 for ids in apps_id:
 
-    dados = collect_app_reviews(app_id=f'{ids}', total_limit=100, page_size=10)
+    dados = collect_app_reviews(app_id=f'{ids}', total_limit=500, page_size=10)
     todas_avaliacoes.extend(dados)
 
 tabela = reviews_to_dataframe(todas_avaliacoes)

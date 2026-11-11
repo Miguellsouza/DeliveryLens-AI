@@ -30,3 +30,7 @@ data/processed/*
 # Modelos e artefatos gerados
 artifacts/*
 !artifacts/.gitkeep
+
+# Arquivos gerados pelo PyInstaller
+/build/
+/dist/

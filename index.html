@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.3.1/css/all.min.css">
+    <title>Delivery AI</title>
+    <style>
+        /*Estilo geral*/
+        html body{
+            margin: 0px;
+            padding: 0px;
+            height: 100vh;
+        }
+
+        body{
+            display: flex;
+            font-family: sans-serif;
+            background-color: #000000;
+            transition: 0.5s;
+        }
+
+        body h1,
+        body h2,
+        body h3{
+            color: #eae4d9; /*bege claro para texto*/
+            transition: 0.5s;
+        }
+
+        body p{
+            color: #888888;
+            transition: 0.5s;
+        }
+
+        aside{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border-right: solid 2px #222222;
+            background-color: #111111;
+            width: 300px;
+            height: 100vh;
+            transition: 0.5s;
+            position: sticky;
+            left: 0;
+            top: 0;    
+        }
+
+        aside span{
+            color: #888888;
+        }
+
+        main{
+            flex: 1;
+            padding-top: 24px;
+            padding-left: 48px;
+            padding-right: 48px;
+        }
+
+        /*Informações do usuário na sidebar / própria sidebar*/
+        #div-user{
+            display: flex;
+            flex-direction: column;
+            box-sizing: border-box;
+            margin-top: 100px;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .btn-outline{
+            background-color: #111111;
+            font-weight: bold;
+            color: #eae4d9;
+            height: 50px;
+            width: 200px;
+            border: solid 1px #333333;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        .btn-outline:hover{
+            background-color: #222222;
+            border: solid 1px #333333;
+        }
+
+        .div-btn-logo{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-logo{
+            width: 40px;
+            height: 30px;
+            border-radius: 10px;
+            filter: invert(12%) sepia(90%) saturate(7454%) hue-rotate(358deg) brightness(108%) contrast(116%);
+        }
+
+        /*Botão modo escuro*/
+        body.dark{
+            background-color: #eae4d9;
+            transition: 0.5s;
+        }
+
+        body.dark h1,
+        body.dark h2,
+        body.dark h3,
+        body.dark p {
+            color: #000000;
+            transition: 0.5s;
+        }
+
+        body.dark aside{
+            background-color: #eae4d9;
+            border-right: none;
+            box-shadow: 0 0px 12px rgba(0, 0, 0, 0.2);
+            transition: 0.2s;
+        }
+
+        body.dark .btn-outline{
+            background-color: #eae4d9;
+            border: none;
+            box-shadow: 0 0px 12px rgba(0, 0, 0, 0.2);
+            transition: 0.5s;
+            color: #000000;
+        }
+
+        body.dark .btn-outline:hover{
+            background-color: #eae4d9;
+            border: none;
+            box-shadow: 0 0px 6px rgba(0, 0, 0, 0.1);
+            transition: 0.2s;
+        }
+
+        #botoes-header{
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        #botao-mode{
+            width: 100px;
+            height: 50px;
+            background-color: #333333;
+            box-shadow: inset 0 0px 12px rgba(0, 0, 0, 0.5);
+            align-items: center;
+            border-radius: 50px;
+            position: relative;
+            cursor: pointer;
+            transition: 0.5s;
+        }
+
+        #indicador{
+            display: flex;
+            width: 50px;
+            height: 50px;
+            left: 0;
+            align-items: center;
+            justify-content: center;
+            background-color: #000000;
+            border-radius: 25px;
+            transform: scale(.9);
+            color: #eae4d9;
+            position: absolute;
+            transition: 0.5s;
+        }
+
+        #botao-mode.dark{
+            background-color: #bba98e;
+            transition: 0.5s;
+        }
+
+        #botao-mode.dark #indicador{
+            left: 50px;
+            transition: 0.5s;
+            background-color: #eae4d9;
+            color: #000000;
+        }
+
+        #avaliacoes{
+            display: flex;
+            justify-content: space-between;
+            margin: 20px 1px;
+        }
+
+        .div-avaliacoes{
+            display: flex;
+            align-items: center;
+            width: 235px;
+            height: 120px;
+            background-color: #222222;
+            border: solid 1px #333333;
+            border-radius: 10px;
+            color: #eae4d9;
+            gap: 32px;
+            box-sizing: border-box;
+            padding-left: 16px;
+            padding-right: 8px;
+        }
+
+        .div-avaliacoes:hover{
+            background-color: #111111;
+            border: solid 1px #000000;
+        }
+
+         body.dark .div-avaliacoes{
+            background-color: #eae4d9;
+            border: none;
+            box-shadow: 0 0px 12px rgba(0, 0, 0, 0.2);
+            transition: 0.2s;
+        }
+
+        body.dark .div-avaliacoes:hover{
+            box-shadow: 0 0px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .div-avaliacoes i{
+            font-size: 40px;
+        }
+
+        #num1{
+            color: cornflowerblue;
+        }
+
+        #num2{
+            color: chartreuse;
+        }
+
+        #num3{
+            color: crimson;
+        }
+
+        #num4{
+            color: yellow;
+        }
+
+        #grafico1{
+            display: flex;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        #grafico-pizza{
+            background-color: #111111;
+            border-radius: 10px;
+            padding: 10px;
+        }
+
+        /*Estilização tradutor widget*/
+        .gt_float_switcher{
+            border-radius: 10px !important;
+        }
+    </style>
+</head>
+<body>
+    <!--Barra Lateral-->
+    <aside>
+        <div id="div-user">
+            <button id="btn_ifood" class="btn-outline"><div class="div-btn-logo"><img src="ifood-svgrepo-com.svg" alt="" class="btn-logo"><h3>IFOOD</h3></div></button>
+            <button id="btn_rappi" class="btn-outline"><div class="div-btn-logo"><img src="rappi-svgrepo-com.svg" alt="" class="btn-logo"><h3>RAPPI</h3></div></button>
+        </div>
+    </aside>
+    <main>
+        <section id="tool-bar">
+            <div id="botoes-header">
+                <select class="btn-outline">
+                    <option value="7" class="btn-outline">📆<h3> Últimos 7 dias</h3></option>
+                    <option value="14">📆<h3> Últimos 14 dias</h3></option>
+                    <option value="30">📆<h3> Últimos 30 dias</h3></option>
+                    <option value="60">📆<h3> Últimos 60 dias</h3></option>
+                </select>
+                <div id="botao-mode"><div id="indicador"><i class="fa-solid fa-cloud-moon"></i></div></div>
+            </div>
+        </section>
+        <section id="avaliacoes">
+            <div class="div-avaliacoes">
+                <i class="fa-regular fa-comments" id="num1"></i>
+                <div>
+                    <h1 id="num1_ava">--</h1>
+                    <p>Avaliações analisadas</p>
+                </div>
+            </div>
+            <div class="div-avaliacoes">
+                <i class="fa-solid fa-face-smile" id="num2"></i>
+                <div>
+                    <h1 id="num2_ava">--</h1>
+                    <p>Sentimento positivo</p>
+                </div>
+            </div>
+            <div class="div-avaliacoes">
+                <i class="fa-solid fa-face-frown" id="num3"></i>
+                <div>
+                    <h1 id="num3_ava">--</h1>
+                    <p>Sentimento negativo</p>
+                </div>
+            </div>
+            <div class="div-avaliacoes">
+                <i class="fa-solid fa-star" id="num4"></i>
+                <div>
+                    <h1 id="num4_ava">--</h1>
+                    <p>Nota média</p>
+                </div>
+            </div>
+        </section>
+        <section id="grafico1">
+            <!-- Importa a biblioteca do Chart.js (caso ainda não tenha colocado) -->
+            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+            <!-- A 'tela' onde o gráfico vai ser desenhado -->
+            <!-- Mude o 600px e o 300px aqui: -->
+            <div style="width: 700px; height: 300px; background-color: #111111; padding: 20px; border-radius: 20px; border: solid 2px #222222;">
+                <canvas id="graficoSobeDesce"></canvas>
+            </div>
+            <!-- Mude a largura (width) e altura (height) aqui para diminuir o gráfico -->
+            <div id="grafico-pizza" style="width: 250px; height: 250px; margin: 0 auto;">
+                <canvas id="meuGrafico"></canvas>
+            </div>
+        </section>
+    </main>
+    <script>
+        //== Modo escuro ==
+        const body = document.querySelector('body')
+        const btn_dark = document.querySelector('#botao-mode')
+        const sunMoon = document.querySelector('#indicador')
+        const sun = sunMoon.querySelector('i')
+
+        btn_dark.addEventListener('click', ()=>{
+            btn_dark.classList.toggle('dark')
+            body.classList.toggle('dark')
+            
+            if(sun.classList.contains('fa-cloud-moon')){
+                sun.classList.remove('fa-cloud-moon')
+                sun.classList.add('fa-sun')
+            }else{
+                sun.classList.remove('fa-sun')
+                sun.classList.add('fa-cloud-moon')
+            }
+        })
+
+        //Integração
+
+        const btnifood = document.getElementById('btn_ifood')
+        const btnrappi = document.getElementById('btn_rappi')
+
+        let num1 = document.getElementById('num1_ava')	
+        let num2 = document.getElementById('num2_ava')
+        let num3 = document.getElementById('num3_ava')
+        let num4 = document.getElementById('num4_ava')
+
+        window.addEventListener('pywebviewready', ()=>{
+            async function obter_indicadores(){
+            }
+
+            carregar_indicadores('br.com.brainweb.ifood')
+
+            btnifood.addEventListener('click', ()=>{
+                carregar_indicadores('br.com.brainweb.ifood')
+            })
+
+            btnrappi.addEventListener('click', ()=>{
+                carregar_indicadores('com.grability.rappi')
+            })
+        })
+        async function carregar_indicadores(app_id){
+            const indicadores = await window.pywebview.api.obter_indicadores(app_id)
+            const avaliacoesDia = await window.pywebview.api.obter_avaliacoes_por_dia(app_id)
+
+            num1.textContent = indicadores.total_avaliacoes
+            num2.textContent = indicadores.total_positivas
+            num3.textContent = indicadores.total_negativas
+            num4.textContent = indicadores.nota_media
+
+            graficoPizza.data.datasets[0].data = [indicadores.total_positivas, indicadores.total_neutras, indicadores.total_negativas]
+            graficoPizza.update()
+
+            graficoLinha.data.labels = avaliacoesDia.data
+            graficoLinha.data.datasets[0].data = avaliacoesDia.quantidade
+            graficoLinha.update()
+        }
+
+        //Gráficos
+
+        const ctx = document.getElementById('meuGrafico');
+
+        const graficoPizza = new Chart(ctx, {
+            type: 'doughnut', 
+            data: {
+                labels: ['Positiva', 'Neutra', 'Negativa'], 
+                datasets: [{
+                    data: [], 
+                    backgroundColor: ['#d4c4a8', '#777777', '#222222'], 
+                    borderWidth: 0 
+                }]
+            },
+            // Adicione esta parte das opções para controlar o tamanho:
+            options: {
+                responsive: true,
+                maintainAspectRatio: false, // Isso desliga a "teimosia" do gráfico de querer ser gigante
+                plugins: {
+                    legend: {
+                        labels: {
+                            color: '#eae4d9' // Já deixa a legenda combinando com seu tema
+                        }
+                    }
+                }
+            }
+        });
+
+        const ctxLinha = document.getElementById('graficoSobeDesce').getContext('2d');
+
+        const graficoLinha = new Chart(ctxLinha, {
+            type: 'line', // É isso que define o estilo "sobe e desce"
+            data: {
+                // Os dias da semana ou do mês
+                labels: ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'], 
+                datasets: [{
+                    label: 'Avaliações',
+                    data: [1, 2, 3, 4, 5], // Os valores subindo e descendo
+                    
+                    // Estilo da linha
+                    borderColor: '#d4c4a8', // Cor da linha (bege do SimpleKash)
+                    borderWidth: 3,         // Grossura da linha
+                    
+                    // Estilo das "bolinhas" em cada ponto
+                    pointBackgroundColor: '#000000',
+                    pointBorderColor: '#d4c4a8',
+                    pointBorderWidth: 2,
+                    pointRadius: 5,
+                    pointHoverRadius: 8, // Aumenta a bolinha ao passar o mouse
+                    
+                    // Comportamento da linha
+                    tension: 0.3 // Deixa a linha levemente curvada. Se quiser reta, mude para 0.
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        labels: {
+                            color: '#eae4d9' // Cor do texto da legenda
+                        }
+                    }
+                },
+                scales: {
+                    // Configurações do eixo X (horizontal)
+                    x: {
+                        grid: { color: '#222222' }, // Cor das linhas de fundo
+                        ticks: { color: '#888888' } // Cor dos dias
+                    },
+                    // Configurações do eixo Y (vertical)
+                    y: {
+                        grid: { color: '#222222' },
+                        ticks: { color: '#888888' }
+                    }
+                }
+            }
+        });
+    </script>
+    <!-- Widget Tradutor -->
+    <div class="gtranslate_wrapper"></div>
+    <script>window.gtranslateSettings = {"default_language":"pt","languages":["pt","it","fr","en","es"],"wrapper_selector":".gtranslate_wrapper","alt_flags":{"pt":"brazil"}}</script>
+    <script src="https://cdn.gtranslate.net/widgets/latest/float.js" defer></script>
+</body>
+</html>
