@@ -1,146 +1,278 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.3.1/css/all.min.css">
-    <title>Delivery AI</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <title>DeliveryLens AI</title>
     <style>
-        /*Estilo geral*/
-        html body{
-            margin: 0px;
-            padding: 0px;
-            height: 100vh;
+        /* =========================================================
+           ESTILO GERAL E PALETA ORIGINAL PRESERVADA
+           ========================================================= */
+        :root {
+            --bg-main: #000000;
+            --bg-surface: #111111;
+            --bg-card: #222222;
+            --border-color: #333333;
+            --border-subtle: #222222;
+            --text-primary: #eae4d9;
+            --text-muted: #888888;
+            --accent-beige: #d4c4a8;
+            --accent-blue: #3b82f6;
+            --accent-blue-soft: rgba(59, 130, 246, 0.15);
+            --status-ok: #7fff00;
+            --status-err: #dc143c;
+            --status-warn: #facc15;
         }
 
-        body{
+        html, body {
+            margin: 0px;
+            padding: 0px;
+            min-height: 100vh;
+        }
+
+        body {
             display: flex;
             font-family: sans-serif;
             background-color: #000000;
+            color: #eae4d9;
             transition: 0.5s;
         }
 
         body h1,
         body h2,
-        body h3{
-            color: #eae4d9; /*bege claro para texto*/
+        body h3,
+        body h4 {
+            color: #eae4d9; /* bege claro para texto */
             transition: 0.5s;
+            margin: 0;
         }
 
-        body p{
+        body p {
             color: #888888;
             transition: 0.5s;
+            margin: 0;
         }
 
-        aside{
+        /* =========================================================
+           SIDEBAR FIXA E NAVEGAÇÃO
+           ========================================================= */
+        aside {
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: space-between;
             border-right: solid 2px #222222;
             background-color: #111111;
-            width: 300px;
+            width: 280px;
+            min-width: 280px;
             height: 100vh;
             transition: 0.5s;
             position: sticky;
             left: 0;
-            top: 0;    
+            top: 0;
+            padding: 24px 16px;
+            box-sizing: border-box;
+            overflow-y: auto;
         }
 
-        aside span{
+        aside span {
             color: #888888;
         }
 
-        main{
-            flex: 1;
-            padding-top: 24px;
-            padding-left: 48px;
-            padding-right: 48px;
+        .sidebar-top {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
         }
 
-        /*Informações do usuário na sidebar / própria sidebar*/
-        #div-user{
+        .brand-header {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 12px;
+            box-sizing: border-box;
+            border-bottom: 1px solid #222222;
+            padding-bottom: 16px;
+        }
+
+        .brand-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            background-color: var(--accent-blue-soft);
+            border: 1px solid var(--accent-blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent-blue);
+            font-size: 18px;
+        }
+
+        .brand-title h2 {
+            font-size: 17px;
+            letter-spacing: 0.3px;
+        }
+
+        .brand-title span {
+            font-size: 11px;
+            display: block;
+            margin-top: 2px;
+        }
+
+        /* Menu de navegação das 5 seções */
+        .nav-menu {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .nav-section-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #888888;
+            padding: 4px 12px;
+            margin-top: 4px;
+        }
+
+        .nav-item {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 14px;
+            background-color: transparent;
+            border: 1px solid transparent;
+            border-radius: 10px;
+            color: #888888;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            text-align: left;
+            transition: 0.2s;
+            box-sizing: border-box;
+        }
+
+        .nav-item i {
+            width: 20px;
+            text-align: center;
+            font-size: 15px;
+        }
+
+        .nav-item:hover {
+            background-color: #222222;
+            color: #eae4d9;
+        }
+
+        .nav-item.active {
+            background-color: #222222;
+            border-color: var(--accent-blue);
+            color: #eae4d9;
+        }
+
+        .nav-item.active i {
+            color: var(--accent-blue);
+        }
+
+        /* Informações do usuário / seletor de app na sidebar (IDs preservados) */
+        #div-user {
             display: flex;
             flex-direction: column;
             box-sizing: border-box;
-            margin-top: 100px;
+            margin-top: 24px;
             align-items: center;
-            gap: 16px;
+            gap: 12px;
+            width: 100%;
+            padding-top: 16px;
+            border-top: 1px solid #222222;
         }
 
-        .btn-outline{
+        .btn-outline {
             background-color: #111111;
             font-weight: bold;
             color: #eae4d9;
-            height: 50px;
-            width: 200px;
+            height: 46px;
+            width: 220px;
             border: solid 1px #333333;
             border-radius: 10px;
             cursor: pointer;
+            transition: 0.2s;
+            padding: 0 12px;
         }
 
-        .btn-outline:hover{
+        .btn-outline:hover {
             background-color: #222222;
             border: solid 1px #333333;
         }
 
-        .div-btn-logo{
+        .btn-outline.app-selected {
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 1px var(--accent-blue);
+        }
+
+        .div-btn-logo {
             display: flex;
             align-items: center;
             justify-content: center;
+            gap: 10px;
         }
 
-        .btn-logo{
-            width: 40px;
-            height: 30px;
-            border-radius: 10px;
+        .div-btn-logo h3 {
+            font-size: 14px;
+        }
+
+        .btn-logo {
+            width: 34px;
+            height: 26px;
+            border-radius: 8px;
             filter: invert(12%) sepia(90%) saturate(7454%) hue-rotate(358deg) brightness(108%) contrast(116%);
         }
 
-        /*Botão modo escuro*/
-        body.dark{
-            background-color: #eae4d9;
-            transition: 0.5s;
+        /* =========================================================
+           ÁREA PRINCIPAL E HEADER
+           ========================================================= */
+        main {
+            flex: 1;
+            padding: 24px 40px 48px 40px;
+            box-sizing: border-box;
+            max-width: calc(100vw - 280px);
         }
 
-        body.dark h1,
-        body.dark h2,
-        body.dark h3,
-        body.dark p {
-            color: #000000;
-            transition: 0.5s;
-        }
-
-        body.dark aside{
-            background-color: #eae4d9;
-            border-right: none;
-            box-shadow: 0 0px 12px rgba(0, 0, 0, 0.2);
-            transition: 0.2s;
-        }
-
-        body.dark .btn-outline{
-            background-color: #eae4d9;
-            border: none;
-            box-shadow: 0 0px 12px rgba(0, 0, 0, 0.2);
-            transition: 0.5s;
-            color: #000000;
-        }
-
-        body.dark .btn-outline:hover{
-            background-color: #eae4d9;
-            border: none;
-            box-shadow: 0 0px 6px rgba(0, 0, 0, 0.1);
-            transition: 0.2s;
-        }
-
-        #botoes-header{
+        #botoes-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
+            gap: 16px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #222222;
+            margin-bottom: 24px;
         }
 
-        #botao-mode{
-            width: 100px;
-            height: 50px;
+        .header-context h1 {
+            font-size: 24px;
+        }
+
+        .header-context p {
+            font-size: 13px;
+            margin-top: 4px;
+        }
+
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        /* Switch de Tema (Preservado) */
+        #botao-mode {
+            width: 90px;
+            height: 44px;
             background-color: #333333;
             box-shadow: inset 0 0px 12px rgba(0, 0, 0, 0.5);
             align-items: center;
@@ -148,287 +280,1555 @@
             position: relative;
             cursor: pointer;
             transition: 0.5s;
+            flex-shrink: 0;
         }
 
-        #indicador{
+        #indicador {
             display: flex;
-            width: 50px;
-            height: 50px;
+            width: 44px;
+            height: 44px;
             left: 0;
             align-items: center;
             justify-content: center;
             background-color: #000000;
             border-radius: 25px;
-            transform: scale(.9);
+            transform: scale(.88);
             color: #eae4d9;
             position: absolute;
             transition: 0.5s;
         }
 
-        #botao-mode.dark{
+        #botao-mode.dark {
             background-color: #bba98e;
             transition: 0.5s;
         }
 
-        #botao-mode.dark #indicador{
-            left: 50px;
+        #botao-mode.dark #indicador {
+            left: 46px;
             transition: 0.5s;
             background-color: #eae4d9;
             color: #000000;
         }
 
-        #avaliacoes{
-            display: flex;
-            justify-content: space-between;
-            margin: 20px 1px;
+        /* =========================================================
+           CONTROLE DE SEÇÕES (SPA)
+           ========================================================= */
+        .page-section {
+            display: none;
+            flex-direction: column;
+            gap: 24px;
         }
 
-        .div-avaliacoes{
+        .page-section.active {
+            display: flex;
+        }
+
+        /* =========================================================
+           CARDS ORIGINAIS (#avaliacoes) E NOVOS KPIS
+           ========================================================= */
+        #avaliacoes {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin: 0;
+        }
+
+        .div-avaliacoes {
             display: flex;
             align-items: center;
-            width: 235px;
-            height: 120px;
+            min-height: 110px;
             background-color: #222222;
             border: solid 1px #333333;
             border-radius: 10px;
             color: #eae4d9;
-            gap: 32px;
+            gap: 20px;
             box-sizing: border-box;
-            padding-left: 16px;
-            padding-right: 8px;
+            padding: 16px 20px;
+            transition: 0.2s;
         }
 
-        .div-avaliacoes:hover{
+        .div-avaliacoes:hover {
             background-color: #111111;
-            border: solid 1px #000000;
+            border: solid 1px var(--accent-blue);
         }
 
-         body.dark .div-avaliacoes{
-            background-color: #eae4d9;
+        .div-avaliacoes i {
+            font-size: 34px;
+            flex-shrink: 0;
+        }
+
+        .div-avaliacoes h1 {
+            font-size: 26px;
+        }
+
+        .div-avaliacoes p {
+            font-size: 13px;
+            margin-top: 4px;
+        }
+
+        #num1 { color: cornflowerblue; }
+        #num2 { color: chartreuse; }
+        #num3 { color: crimson; }
+        #num4 { color: yellow; }
+
+        /* Grid de KPIs adicionais */
+        .kpi-grid-5 {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 14px;
+        }
+
+        .kpi-grid-4 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+        }
+
+        .kpi-mini-card {
+            background-color: #111111;
+            border: 1px solid #222222;
+            border-radius: 10px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            transition: 0.2s;
+        }
+
+        .kpi-mini-card:hover {
+            border-color: #333333;
+        }
+
+        .kpi-mini-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 12px;
+            color: #888888;
+        }
+
+        .kpi-mini-header i {
+            color: var(--accent-blue);
+            font-size: 14px;
+        }
+
+        .kpi-mini-value {
+            font-size: 22px;
+            font-weight: bold;
+            color: #eae4d9;
+        }
+
+        .kpi-mini-sub {
+            font-size: 11px;
+            color: #888888;
+        }
+
+        /* =========================================================
+           PAINÉIS, CONTAINERS E GRÁFICOS
+           ========================================================= */
+        .panel-card {
+            background-color: #111111;
+            border: 2px solid #222222;
+            border-radius: 14px;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .panel-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .panel-header h3 {
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .panel-header h3 i {
+            color: var(--accent-blue);
+        }
+
+        /* Telemetria do Pipeline no Dashboard */
+        .pipeline-strip {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            background-color: #111111;
+            border: 1px solid #222222;
+            border-radius: 12px;
+            padding: 14px 20px;
+        }
+
+        .pipeline-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            border-right: 1px solid #222222;
+            padding-right: 12px;
+        }
+
+        .pipeline-item:last-child {
+            border-right: none;
+            padding-right: 0;
+        }
+
+        .pipeline-item span {
+            font-size: 11px;
+            color: #888888;
+            text-transform: uppercase;
+        }
+
+        .pipeline-item strong {
+            font-size: 13px;
+            color: #eae4d9;
+        }
+
+        /* Gráficos originais e novos */
+        #grafico1 {
+            display: flex;
+            gap: 24px;
+            margin-bottom: 0;
+        }
+
+        .chart-box-line {
+            flex: 2;
+            height: 300px;
+            background-color: #111111;
+            padding: 20px;
+            border-radius: 20px;
+            border: solid 2px #222222;
+            box-sizing: border-box;
+        }
+
+        #grafico-pizza {
+            flex: 1;
+            min-width: 260px;
+            height: 300px;
+            background-color: #111111;
+            border-radius: 20px;
+            border: solid 2px #222222;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .charts-grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        .chart-canvas-wrapper {
+            position: relative;
+            height: 250px;
+            width: 100%;
+        }
+
+        /* =========================================================
+           FORMULÁRIOS, INPUTS E BOTÕES DE AÇÃO
+           ========================================================= */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            align-items: end;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .form-group label {
+            font-size: 12px;
+            color: #888888;
+            font-weight: bold;
+        }
+
+        .form-control {
+            background-color: #000000;
+            color: #eae4d9;
+            border: 1px solid #333333;
+            border-radius: 8px;
+            height: 40px;
+            padding: 0 12px;
+            font-size: 13px;
+            outline: none;
+            transition: 0.2s;
+        }
+
+        .form-control:focus {
+            border-color: var(--accent-blue);
+        }
+
+        .btn-primary {
+            background-color: var(--accent-blue);
+            color: #ffffff;
             border: none;
+            border-radius: 8px;
+            height: 40px;
+            padding: 0 18px;
+            font-weight: bold;
+            font-size: 13px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: 0.2s;
+        }
+
+        .btn-primary:hover {
+            filter: brightness(1.1);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-secondary {
+            background-color: #222222;
+            color: #eae4d9;
+            border: 1px solid #333333;
+            border-radius: 8px;
+            height: 36px;
+            padding: 0 14px;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: 0.2s;
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--accent-blue);
+        }
+
+        .btn-sm {
+            height: 28px;
+            padding: 0 10px;
+            font-size: 11px;
+            border-radius: 6px;
+        }
+
+        /* =========================================================
+           BARRA DE PROGRESSO E ESTADOS VISUAIS
+           ========================================================= */
+        .progress-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .progress-track {
+            width: 100%;
+            height: 10px;
+            background-color: #222222;
+            border-radius: 999px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background-color: var(--accent-blue);
+            transition: width 0.3s ease;
+        }
+
+        .progress-stats {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: #888888;
+        }
+
+        /* Badges de Estado e Semântica */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 10px;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .badge-neutral {
+            background-color: #222222;
+            color: #eae4d9;
+            border: 1px solid #333333;
+        }
+
+        .badge-blue {
+            background-color: rgba(59, 130, 246, 0.15);
+            color: #60a5fa;
+            border: 1px solid rgba(59, 130, 246, 0.4);
+        }
+
+        .badge-positive {
+            background-color: rgba(127, 255, 0, 0.12);
+            color: #84cc16;
+            border: 1px solid rgba(132, 204, 22, 0.4);
+        }
+
+        .badge-negative {
+            background-color: rgba(220, 20, 60, 0.15);
+            color: #f87171;
+            border: 1px solid rgba(248, 113, 113, 0.4);
+        }
+
+        .badge-warning {
+            background-color: rgba(250, 204, 21, 0.15);
+            color: #facc15;
+            border: 1px solid rgba(250, 204, 21, 0.4);
+        }
+
+        .alert-box {
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border: 1px solid #333333;
+            background-color: #000000;
+            color: #888888;
+        }
+
+        .alert-box.error {
+            border-color: rgba(248, 113, 113, 0.5);
+            background-color: rgba(220, 20, 60, 0.1);
+            color: #f87171;
+        }
+
+        .alert-box.info {
+            border-color: rgba(59, 130, 246, 0.4);
+            background-color: rgba(59, 130, 246, 0.08);
+            color: #93c5fd;
+        }
+
+        /* =========================================================
+           TABELAS DE DADOS
+           ========================================================= */
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+            text-align: left;
+        }
+
+        .data-table th {
+            padding: 12px 14px;
+            border-bottom: 1px solid #333333;
+            color: #888888;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            background-color: #000000;
+        }
+
+        .data-table td {
+            padding: 12px 14px;
+            border-bottom: 1px solid #222222;
+            color: #eae4d9;
+            vertical-align: middle;
+        }
+
+        .data-table tr:hover td {
+            background-color: rgba(255, 255, 255, 0.02);
+        }
+
+        .data-table tr.row-review-needed td {
+            border-left: 3px solid #facc15;
+            background-color: rgba(250, 204, 21, 0.04);
+        }
+
+        .data-table tr.row-structural-error td {
+            border-left: 3px solid #f87171;
+            background-color: rgba(220, 20, 60, 0.05);
+        }
+
+        .text-truncate {
+            max-width: 280px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .empty-state-cell {
+            text-align: center;
+            padding: 36px 16px !important;
+            color: #888888 !important;
+        }
+
+        .empty-state-cell i {
+            font-size: 24px;
+            margin-bottom: 8px;
+            display: block;
+            color: var(--accent-blue);
+        }
+
+        /* Paginação */
+        .pagination-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 16px;
+            font-size: 12px;
+            color: #888888;
+        }
+
+        /* Matriz de Confusão */
+        .matrix-grid {
+            display: grid;
+            grid-template-columns: 110px repeat(3, 1fr);
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .matrix-cell {
+            background-color: #000000;
+            border: 1px solid #222222;
+            border-radius: 8px;
+            padding: 14px 8px;
+            text-align: center;
+            font-size: 13px;
+        }
+
+        .matrix-header {
+            background-color: transparent;
+            border: none;
+            color: #888888;
+            font-size: 11px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .matrix-diag {
+            border-color: var(--accent-blue);
+            background-color: rgba(59, 130, 246, 0.12);
+            font-weight: bold;
+        }
+
+        /* =========================================================
+           MODAL DE DETALHES / CORREÇÃO MANUAL
+           ========================================================= */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background-color: rgba(0, 0, 0, 0.78);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 999;
+            padding: 20px;
+        }
+
+        .modal-overlay.open {
+            display: flex;
+        }
+
+        .modal-card {
+            background-color: #111111;
+            border: 1px solid #333333;
+            border-radius: 14px;
+            width: 100%;
+            max-width: 600px;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .code-preview {
+            background-color: #000000;
+            border: 1px solid #222222;
+            border-radius: 8px;
+            padding: 12px;
+            font-family: monospace;
+            font-size: 12px;
+            color: #d4c4a8;
+            white-space: pre-wrap;
+            max-height: 160px;
+            overflow-y: auto;
+        }
+
+        /* =========================================================
+           BOTÃO MODO CLARO (CLASSE .dark ORIGINAL PRESERVADA)
+           ========================================================= */
+        body.dark {
+            background-color: #eae4d9;
+            color: #000000;
+            transition: 0.5s;
+        }
+
+        body.dark h1,
+        body.dark h2,
+        body.dark h3,
+        body.dark h4,
+        body.dark p,
+        body.dark .kpi-mini-value,
+        body.dark .pipeline-item strong {
+            color: #000000;
+            transition: 0.5s;
+        }
+
+        body.dark aside {
+            background-color: #eae4d9;
+            border-right: none;
             box-shadow: 0 0px 12px rgba(0, 0, 0, 0.2);
             transition: 0.2s;
         }
 
-        body.dark .div-avaliacoes:hover{
+        body.dark .brand-header,
+        body.dark #div-user,
+        body.dark #botoes-header {
+            border-color: rgba(0, 0, 0, 0.12);
+        }
+
+        body.dark .nav-item {
+            color: #444444;
+        }
+
+        body.dark .nav-item:hover,
+        body.dark .nav-item.active {
+            background-color: rgba(0, 0, 0, 0.06);
+            color: #000000;
+        }
+
+        body.dark .btn-outline {
+            background-color: #eae4d9;
+            border: none;
+            box-shadow: 0 0px 12px rgba(0, 0, 0, 0.2);
+            transition: 0.5s;
+            color: #000000;
+        }
+
+        body.dark .btn-outline:hover {
+            background-color: #eae4d9;
+            border: none;
+            box-shadow: 0 0px 6px rgba(0, 0, 0, 0.1);
+            transition: 0.2s;
+        }
+
+        body.dark .div-avaliacoes,
+        body.dark .kpi-mini-card,
+        body.dark .panel-card,
+        body.dark .pipeline-strip,
+        body.dark .chart-box-line,
+        body.dark #grafico-pizza,
+        body.dark .modal-card {
+            background-color: #eae4d9;
+            border: 1px solid rgba(0, 0, 0, 0.12);
+            box-shadow: 0 0px 12px rgba(0, 0, 0, 0.12);
+            color: #000000;
+            transition: 0.2s;
+        }
+
+        body.dark .div-avaliacoes:hover {
             box-shadow: 0 0px 6px rgba(0, 0, 0, 0.1);
         }
 
-        .div-avaliacoes i{
-            font-size: 40px;
+        body.dark .form-control,
+        body.dark .data-table th,
+        body.dark .matrix-cell,
+        body.dark .code-preview,
+        body.dark .alert-box {
+            background-color: #dfd7c8;
+            color: #000000;
+            border-color: rgba(0, 0, 0, 0.15);
         }
 
-        #num1{
-            color: cornflowerblue;
+        body.dark .data-table td {
+            color: #000000;
+            border-bottom-color: rgba(0, 0, 0, 0.1);
         }
 
-        #num2{
-            color: chartreuse;
+        body.dark .btn-secondary {
+            background-color: #dfd7c8;
+            color: #000000;
+            border-color: rgba(0, 0, 0, 0.15);
         }
 
-        #num3{
-            color: crimson;
+        body.dark .badge-neutral {
+            background-color: #dfd7c8;
+            color: #000000;
+            border-color: rgba(0, 0, 0, 0.15);
         }
 
-        #num4{
-            color: yellow;
-        }
-
-        #grafico1{
-            display: flex;
-            gap: 40px;
-            margin-bottom: 40px;
-        }
-
-        #grafico-pizza{
-            background-color: #111111;
-            border-radius: 10px;
-            padding: 10px;
-        }
-
-        /*Estilização tradutor widget*/
-        .gt_float_switcher{
+        /* Estilização tradutor widget */
+        .gt_float_switcher {
             border-radius: 10px !important;
+        }
+
+        @media (max-width: 1200px) {
+            #avaliacoes, .kpi-grid-5, .kpi-grid-4, .pipeline-strip {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            #grafico1, .charts-grid-2 {
+                flex-direction: column;
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
-    <!--Barra Lateral-->
+    <!-- =========================================================
+         BARRA LATERAL FIXA (5 SEÇÕES + SELETORES ORIGINAIS)
+         ========================================================= -->
     <aside>
+        <div class="sidebar-top">
+            <div class="brand-header">
+                <div class="brand-icon"><i class="fa-solid fa-layer-group"></i></div>
+                <div class="brand-title">
+                    <h2>DeliveryLens AI</h2>
+                    <span>Data & ML Pipeline</span>
+                </div>
+            </div>
+
+            <nav class="nav-menu" aria-label="Navegação Principal">
+                <span class="nav-section-label">Plataforma</span>
+                <button class="nav-item active" data-target="section-dashboard" data-title="Dashboard" data-subtitle="Visão geral do pipeline de coleta, sentimento e qualidade de dados">
+                    <i class="fa-solid fa-chart-line"></i>
+                    <span>Dashboard</span>
+                </button>
+                <button class="nav-item" data-target="section-classification" data-title="AI Classification" data-subtitle="Classificação em lote utilizando Large Language Models (LLMs)">
+                    <i class="fa-solid fa-robot"></i>
+                    <span>AI Classification</span>
+                </button>
+                <button class="nav-item" data-target="section-validation" data-title="Data Validation" data-subtitle="Auditoria estrutural (JSON) e revisão semântica das saídas da IA">
+                    <i class="fa-solid fa-shield-halved"></i>
+                    <span>Data Validation</span>
+                </button>
+                <button class="nav-item" data-target="section-evaluation" data-title="Model Evaluation" data-subtitle="Avaliação comparativa entre Scikit-learn (TF-IDF + LR) e LLMs">
+                    <i class="fa-solid fa-scale-balanced"></i>
+                    <span>Model Evaluation</span>
+                </button>
+                <button class="nav-item" data-target="section-datasets" data-title="Dataset Management" data-subtitle="Gestão, filtragem, importação e exportação de datasets no PostgreSQL">
+                    <i class="fa-solid fa-database"></i>
+                    <span>Dataset Management</span>
+                </button>
+            </nav>
+        </div>
+
+        <!-- Bloco original preservado com os mesmos IDs e classes -->
         <div id="div-user">
-            <button id="btn_ifood" class="btn-outline"><div class="div-btn-logo"><img src="ifood-svgrepo-com.svg" alt="" class="btn-logo"><h3>IFOOD</h3></div></button>
-            <button id="btn_rappi" class="btn-outline"><div class="div-btn-logo"><img src="rappi-svgrepo-com.svg" alt="" class="btn-logo"><h3>RAPPI</h3></div></button>
+            <span class="nav-section-label" style="align-self: flex-start; padding-left: 4px;">Fonte Ativa</span>
+            <button id="btn_ifood" class="btn-outline app-selected">
+                <div class="div-btn-logo">
+                    <img src="ifood-svgrepo-com.svg" alt="" class="btn-logo">
+                    <h3>IFOOD</h3>
+                </div>
+            </button>
+            <button id="btn_rappi" class="btn-outline">
+                <div class="div-btn-logo">
+                    <img src="rappi-svgrepo-com.svg" alt="" class="btn-logo">
+                    <h3>RAPPI</h3>
+                </div>
+            </button>
         </div>
     </aside>
+
+    <!-- =========================================================
+         CONTEÚDO PRINCIPAL
+         ========================================================= -->
     <main>
+        <!-- Barra Superior Global (IDs e classes originais preservados) -->
         <section id="tool-bar">
             <div id="botoes-header">
-                <select class="btn-outline">
-                    <option value="7" class="btn-outline">📆<h3> Últimos 7 dias</h3></option>
-                    <option value="14">📆<h3> Últimos 14 dias</h3></option>
-                    <option value="30">📆<h3> Últimos 30 dias</h3></option>
-                    <option value="60">📆<h3> Últimos 60 dias</h3></option>
-                </select>
-                <div id="botao-mode"><div id="indicador"><i class="fa-solid fa-cloud-moon"></i></div></div>
-            </div>
-        </section>
-        <section id="avaliacoes">
-            <div class="div-avaliacoes">
-                <i class="fa-regular fa-comments" id="num1"></i>
-                <div>
-                    <h1 id="num1_ava">--</h1>
-                    <p>Avaliações analisadas</p>
+                <div class="header-context">
+                    <h1 id="page-title">Dashboard</h1>
+                    <p id="page-subtitle">Visão geral do pipeline de coleta, sentimento e qualidade de dados</p>
                 </div>
-            </div>
-            <div class="div-avaliacoes">
-                <i class="fa-solid fa-face-smile" id="num2"></i>
-                <div>
-                    <h1 id="num2_ava">--</h1>
-                    <p>Sentimento positivo</p>
-                </div>
-            </div>
-            <div class="div-avaliacoes">
-                <i class="fa-solid fa-face-frown" id="num3"></i>
-                <div>
-                    <h1 id="num3_ava">--</h1>
-                    <p>Sentimento negativo</p>
-                </div>
-            </div>
-            <div class="div-avaliacoes">
-                <i class="fa-solid fa-star" id="num4"></i>
-                <div>
-                    <h1 id="num4_ava">--</h1>
-                    <p>Nota média</p>
+
+                <div class="header-controls">
+                    <span id="backend-connection-badge" class="badge badge-neutral">
+                        <i class="fa-solid fa-circle-notch"></i> Aguardando PyWebView
+                    </span>
+
+                    <select id="select-periodo" class="btn-outline">
+                        <option value="7" class="btn-outline">📆 Últimos 7 dias</option>
+                        <option value="14">📆 Últimos 14 dias</option>
+                        <option value="30">📆 Últimos 30 dias</option>
+                        <option value="60">📆 Últimos 60 dias</option>
+                    </select>
+
+                    <div id="botao-mode" title="Alternar tema">
+                        <div id="indicador"><i class="fa-solid fa-cloud-moon"></i></div>
+                    </div>
                 </div>
             </div>
         </section>
-        <section id="grafico1">
-            <!-- Importa a biblioteca do Chart.js (caso ainda não tenha colocado) -->
-            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-            <!-- A 'tela' onde o gráfico vai ser desenhado -->
-            <!-- Mude o 600px e o 300px aqui: -->
-            <div style="width: 700px; height: 300px; background-color: #111111; padding: 20px; border-radius: 20px; border: solid 2px #222222;">
-                <canvas id="graficoSobeDesce"></canvas>
+
+        <!-- =====================================================
+             1. SEÇÃO: DASHBOARD
+             ===================================================== -->
+        <section id="section-dashboard" class="page-section active">
+            <!-- Telemetria do Pipeline -->
+            <div class="pipeline-strip">
+                <div class="pipeline-item">
+                    <span>Última Execução do Pipeline</span>
+                    <strong id="dash-ultima-execucao">--</strong>
+                </div>
+                <div class="pipeline-item">
+                    <span>Status do Processamento</span>
+                    <div><span id="dash-status-pipeline" class="badge badge-neutral">Indisponível</span></div>
+                </div>
+                <div class="pipeline-item">
+                    <span>Último Modelo Utilizado</span>
+                    <strong id="dash-ultimo-modelo">--</strong>
+                </div>
+                <div class="pipeline-item">
+                    <span>Resumo de Qualidade</span>
+                    <strong id="dash-resumo-qualidade">--</strong>
+                </div>
             </div>
-            <!-- Mude a largura (width) e altura (height) aqui para diminuir o gráfico -->
-            <div id="grafico-pizza" style="width: 250px; height: 250px; margin: 0 auto;">
-                <canvas id="meuGrafico"></canvas>
+
+            <!-- Cards Originais Preservados (#avaliacoes, .div-avaliacoes, #num1..4_ava) -->
+            <section id="avaliacoes">
+                <div class="div-avaliacoes">
+                    <i class="fa-regular fa-comments" id="num1"></i>
+                    <div>
+                        <h1 id="num1_ava">--</h1>
+                        <p>Avaliações analisadas</p>
+                    </div>
+                </div>
+                <div class="div-avaliacoes">
+                    <i class="fa-solid fa-face-smile" id="num2"></i>
+                    <div>
+                        <h1 id="num2_ava">--</h1>
+                        <p>Sentimento positivo</p>
+                    </div>
+                </div>
+                <div class="div-avaliacoes">
+                    <i class="fa-solid fa-face-frown" id="num3"></i>
+                    <div>
+                        <h1 id="num3_ava">--</h1>
+                        <p>Sentimento negativo</p>
+                    </div>
+                </div>
+                <div class="div-avaliacoes">
+                    <i class="fa-solid fa-star" id="num4"></i>
+                    <div>
+                        <h1 id="num4_ava">--</h1>
+                        <p>Nota média</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Novos Cards Informativos do Pipeline -->
+            <div class="kpi-grid-5">
+                <div class="kpi-mini-card">
+                    <div class="kpi-mini-header">
+                        <span>Total Coletadas</span>
+                        <i class="fa-solid fa-cloud-arrow-down"></i>
+                    </div>
+                    <div class="kpi-mini-value" id="dash-total-coletadas">--</div>
+                    <span class="kpi-mini-sub">Google Play Scraper</span>
+                </div>
+                <div class="kpi-mini-card">
+                    <div class="kpi-mini-header">
+                        <span>Total Processadas</span>
+                        <i class="fa-solid fa-microchip"></i>
+                    </div>
+                    <div class="kpi-mini-value" id="dash-total-processadas">--</div>
+                    <span class="kpi-mini-sub">Limpas e normalizadas</span>
+                </div>
+                <div class="kpi-mini-card">
+                    <div class="kpi-mini-header">
+                        <span>Registros Validados</span>
+                        <i class="fa-solid fa-check-double"></i>
+                    </div>
+                    <div class="kpi-mini-value" id="dash-total-validados">--</div>
+                    <span class="kpi-mini-sub">Schema e regras aprovados</span>
+                </div>
+                <div class="kpi-mini-card">
+                    <div class="kpi-mini-header">
+                        <span>Pendentes de Revisão</span>
+                        <i class="fa-solid fa-triangle-exclamation" style="color: #facc15;"></i>
+                    </div>
+                    <div class="kpi-mini-value" id="dash-pendentes-revisao">--</div>
+                    <span class="kpi-mini-sub">Requerem auditoria humana</span>
+                </div>
+                <div class="kpi-mini-card">
+                    <div class="kpi-mini-header">
+                        <span>Classificações Realizadas</span>
+                        <i class="fa-solid fa-tags"></i>
+                    </div>
+                    <div class="kpi-mini-value" id="dash-total-classificacoes">--</div>
+                    <span class="kpi-mini-sub">ML + LLMs</span>
+                </div>
+            </div>
+
+            <!-- Gráficos Originais Preservados (#grafico1, #graficoSobeDesce, #grafico-pizza, #meuGrafico) -->
+            <section id="grafico1">
+                <div class="chart-box-line">
+                    <canvas id="graficoSobeDesce"></canvas>
+                </div>
+                <div id="grafico-pizza">
+                    <canvas id="meuGrafico"></canvas>
+                </div>
+            </section>
+
+            <!-- Novos Gráficos do Dashboard -->
+            <div class="charts-grid-2">
+                <div class="panel-card">
+                    <div class="panel-header">
+                        <h3><i class="fa-solid fa-layer-group"></i> Distribuição por Categoria</h3>
+                        <span class="badge badge-neutral">Backend Sync</span>
+                    </div>
+                    <div class="chart-canvas-wrapper">
+                        <canvas id="graficoCategorias"></canvas>
+                    </div>
+                </div>
+                <div class="panel-card">
+                    <div class="panel-header">
+                        <h3><i class="fa-solid fa-mobile-screen-button"></i> Volume por Aplicativo</h3>
+                        <span class="badge badge-neutral">Comparativo</span>
+                    </div>
+                    <div class="chart-canvas-wrapper">
+                        <canvas id="graficoApps"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- =====================================================
+             2. SEÇÃO: AI CLASSIFICATION
+             ===================================================== -->
+        <section id="section-classification" class="page-section">
+            <!-- Área de Configuração -->
+            <div class="panel-card">
+                <div class="panel-header">
+                    <h3><i class="fa-solid fa-sliders"></i> Configuração de Inferência LLM</h3>
+                    <span class="badge badge-blue"><i class="fa-solid fa-lock"></i> Chaves gerenciadas no Backend</span>
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="cls-dataset">Conjunto de Dados</label>
+                        <select id="cls-dataset" class="form-control">
+                            <option value="">Selecione um dataset...</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="cls-app">Aplicativo de Origem</label>
+                        <select id="cls-app" class="form-control">
+                            <option value="all">Todos os aplicativos</option>
+                            <option value="br.com.brainweb.ifood">iFood</option>
+                            <option value="com.grability.rappi">Rappi</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="cls-modelo">Modelo LLM Disponível</label>
+                        <select id="cls-modelo" class="form-control">
+                            <option value="">Carregando modelos do backend...</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="cls-quantidade">Quantidade de Registros</label>
+                        <input type="number" id="cls-quantidade" class="form-control" min="1" max="5000" value="50" placeholder="Ex: 50">
+                    </div>
+                    <div class="form-group">
+                        <button id="btn-iniciar-classificacao" class="btn-primary">
+                            <i class="fa-solid fa-play"></i> Iniciar Classificação
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Área de Processamento -->
+            <div class="panel-card">
+                <div class="panel-header">
+                    <h3><i class="fa-solid fa-bars-progress"></i> Acompanhamento da Execução</h3>
+                    <span id="cls-status-badge" class="badge badge-neutral">Ocioso</span>
+                </div>
+
+                <div class="progress-wrapper">
+                    <div class="progress-track">
+                        <div id="cls-progress-bar" class="progress-fill"></div>
+                    </div>
+                    <div class="progress-stats">
+                        <span>Processados: <strong id="cls-qtd-processados">0</strong></span>
+                        <span>Restantes: <strong id="cls-qtd-restantes">0</strong></span>
+                        <span>Progresso: <strong id="cls-percentual">0%</strong></span>
+                    </div>
+                </div>
+
+                <div id="cls-feedback-box" class="alert-box info" style="margin-top: 14px;">
+                    <i class="fa-solid fa-circle-info"></i>
+                    <span>Aguardando início do lote. As chamadas às APIs de LLM são executadas exclusivamente no servidor Python.</span>
+                </div>
+            </div>
+
+            <!-- Tabela de Classificações -->
+            <div class="panel-card">
+                <div class="panel-header">
+                    <h3><i class="fa-solid fa-table-list"></i> Resultados da Classificação</h3>
+                    <button id="btn-atualizar-classificacoes" class="btn-secondary">
+                        <i class="fa-solid fa-rotate"></i> Atualizar Tabela
+                    </button>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Avaliação Original</th>
+                                <th>Aplicativo</th>
+                                <th>Sentimento</th>
+                                <th>Categoria</th>
+                                <th>Tipo de Problema</th>
+                                <th>Confiança</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbody-classificacoes">
+                            <tr>
+                                <td colspan="7" class="empty-state-cell">
+                                    <i class="fa-solid fa-inbox"></i>
+                                    Nenhum resultado de classificação carregado. Inicie uma execução ou consulte o backend.
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- =====================================================
+             3. SEÇÃO: DATA VALIDATION
+             ===================================================== -->
+        <section id="section-validation" class="page-section">
+            <!-- Cards de Validação -->
+            <div class="kpi-grid-4">
+                <div class="kpi-mini-card">
+                    <div class="kpi-mini-header">
+                        <span>Registros Aprovados</span>
+                        <i class="fa-solid fa-circle-check" style="color: #84cc16;"></i>
+                    </div>
+                    <div class="kpi-mini-value" id="val-aprovados">--</div>
+                    <span class="kpi-mini-sub">Schema e semântica íntegros</span>
+                </div>
+                <div class="kpi-mini-card">
+                    <div class="kpi-mini-header">
+                        <span>Registros Rejeitados</span>
+                        <i class="fa-solid fa-circle-xmark" style="color: #f87171;"></i>
+                    </div>
+                    <div class="kpi-mini-value" id="val-rejeitados">--</div>
+                    <span class="kpi-mini-sub">JSON inválido / campos ausentes</span>
+                </div>
+                <div class="kpi-mini-card">
+                    <div class="kpi-mini-header">
+                        <span>Pendentes de Revisão</span>
+                        <i class="fa-solid fa-clock" style="color: #facc15;"></i>
+                    </div>
+                    <div class="kpi-mini-value" id="val-pendentes">--</div>
+                    <span class="kpi-mini-sub">Inconsistência semântica</span>
+                </div>
+                <div class="kpi-mini-card">
+                    <div class="kpi-mini-header">
+                        <span>Taxa de Validação</span>
+                        <i class="fa-solid fa-percent"></i>
+                    </div>
+                    <div class="kpi-mini-value" id="val-taxa">--</div>
+                    <span class="kpi-mini-sub">Confiabilidade do pipeline</span>
+                </div>
+            </div>
+
+            <!-- Tabela de Validação e Auditoria -->
+            <div class="panel-card">
+                <div class="panel-header">
+                    <h3><i class="fa-solid fa-clipboard-check"></i> Auditoria de Qualidade e Inconsistências</h3>
+                    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                        <select id="val-filtro-tipo" class="form-control" style="height: 36px;">
+                            <option value="all">Todos os registros</option>
+                            <option value="estrutural">Erro Estrutural (JSON / Campos)</option>
+                            <option value="semantico">Inconsistência Semântica</option>
+                            <option value="pendente">Pendentes de Revisão</option>
+                        </select>
+                        <button id="btn-carregar-validacao" class="btn-secondary">
+                            <i class="fa-solid fa-rotate"></i> Sincronizar
+                        </button>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Texto Original</th>
+                                <th>Classificação IA</th>
+                                <th>Natureza da Falha</th>
+                                <th>Resultado</th>
+                                <th>Motivo da Inconsistência</th>
+                                <th>Processado em</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbody-validacao">
+                            <tr>
+                                <td colspan="7" class="empty-state-cell">
+                                    <i class="fa-solid fa-shield-halved"></i>
+                                    Nenhum registro de validação disponível no momento.
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- =====================================================
+             4. SEÇÃO: MODEL EVALUATION
+             ===================================================== -->
+        <section id="section-evaluation" class="page-section">
+            <!-- Seletor e Metadados da Avaliação -->
+            <div class="panel-card">
+                <div class="panel-header">
+                    <h3><i class="fa-solid fa-flask"></i> Parâmetros e Metadados do Experimento</h3>
+                    <div style="display: flex; gap: 10px; align-items: center;">
+                        <select id="eval-modelo-select" class="form-control" style="height: 36px;">
+                            <option value="sklearn_tfidf_lr">Scikit-learn (TF-IDF + Regressão Logística)</option>
+                        </select>
+                        <button id="btn-carregar-metricas" class="btn-primary" style="height: 36px;">
+                            <i class="fa-solid fa-calculator"></i> Carregar Métricas
+                        </button>
+                    </div>
+                </div>
+
+                <div class="pipeline-strip">
+                    <div class="pipeline-item">
+                        <span>Modelo Avaliado</span>
+                        <strong id="eval-meta-modelo">--</strong>
+                    </div>
+                    <div class="pipeline-item">
+                        <span>Registros na Avaliação</span>
+                        <strong id="eval-meta-qtd">--</strong>
+                    </div>
+                    <div class="pipeline-item">
+                        <span>Data da Avaliação</span>
+                        <strong id="eval-meta-data">--</strong>
+                    </div>
+                    <div class="pipeline-item">
+                        <span>Conjunto de Referência</span>
+                        <strong id="eval-meta-gold">--</strong>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cards de Métricas -->
+            <div class="kpi-grid-4">
+                <div class="kpi-mini-card">
+                    <div class="kpi-mini-header">
+                        <span>Acurácia (Accuracy)</span>
+                        <i class="fa-solid fa-bullseye"></i>
+                    </div>
+                    <div class="kpi-mini-value" id="eval-accuracy">--</div>
+                    <span class="kpi-mini-sub">Calculado no backend</span>
+                </div>
+                <div class="kpi-mini-card">
+                    <div class="kpi-mini-header">
+                        <span>Precisão (Precision)</span>
+                        <i class="fa-solid fa-crosshairs"></i>
+                    </div>
+                    <div class="kpi-mini-value" id="eval-precision">--</div>
+                    <span class="kpi-mini-sub">Média ponderada / macro</span>
+                </div>
+                <div class="kpi-mini-card">
+                    <div class="kpi-mini-header">
+                        <span>Revocação (Recall)</span>
+                        <i class="fa-solid fa-magnifying-glass-chart"></i>
+                    </div>
+                    <div class="kpi-mini-value" id="eval-recall">--</div>
+                    <span class="kpi-mini-sub">Sensibilidade por classe</span>
+                </div>
+                <div class="kpi-mini-card">
+                    <div class="kpi-mini-header">
+                        <span>F1-Score</span>
+                        <i class="fa-solid fa-chart-simple"></i>
+                    </div>
+                    <div class="kpi-mini-value" id="eval-f1">--</div>
+                    <span class="kpi-mini-sub">Média harmônica</span>
+                </div>
+            </div>
+
+            <!-- Matriz de Confusão e Comparação Previsão x Gold -->
+            <div class="charts-grid-2">
+                <div class="panel-card">
+                    <div class="panel-header">
+                        <h3><i class="fa-solid fa-border-all"></i> Matriz de Confusão</h3>
+                        <span class="badge badge-neutral">Real vs Previsto</span>
+                    </div>
+                    <div id="confusion-matrix-container" class="matrix-grid">
+                        <div class="matrix-header">Real \ Previsto</div>
+                        <div class="matrix-header">Positivo</div>
+                        <div class="matrix-header">Neutro</div>
+                        <div class="matrix-header">Negativo</div>
+
+                        <div class="matrix-header">Positivo</div>
+                        <div class="matrix-cell matrix-diag" id="cm-0-0">--</div>
+                        <div class="matrix-cell" id="cm-0-1">--</div>
+                        <div class="matrix-cell" id="cm-0-2">--</div>
+
+                        <div class="matrix-header">Neutro</div>
+                        <div class="matrix-cell" id="cm-1-0">--</div>
+                        <div class="matrix-cell matrix-diag" id="cm-1-1">--</div>
+                        <div class="matrix-cell" id="cm-1-2">--</div>
+
+                        <div class="matrix-header">Negativo</div>
+                        <div class="matrix-cell" id="cm-2-0">--</div>
+                        <div class="matrix-cell" id="cm-2-1">--</div>
+                        <div class="matrix-cell matrix-diag" id="cm-2-2">--</div>
+                    </div>
+                </div>
+
+                <div class="panel-card">
+                    <div class="panel-header">
+                        <h3><i class="fa-solid fa-code-compare"></i> Comparativo entre Modelos</h3>
+                        <span class="badge badge-neutral">Scikit-learn vs LLMs</span>
+                    </div>
+                    <div class="chart-canvas-wrapper">
+                        <canvas id="graficoComparativoModelos"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Distribuição de Erros e Amostra de Divergências -->
+            <div class="charts-grid-2">
+                <div class="panel-card">
+                    <div class="panel-header">
+                        <h3><i class="fa-solid fa-bug"></i> Distribuição de Erros por Categoria</h3>
+                    </div>
+                    <div class="chart-canvas-wrapper">
+                        <canvas id="graficoErrosCategoria"></canvas>
+                    </div>
+                </div>
+
+                <div class="panel-card">
+                    <div class="panel-header">
+                        <h3><i class="fa-solid fa-list-check"></i> Previsto vs Referência (Gold Dataset)</h3>
+                    </div>
+                    <div class="table-responsive" style="max-height: 250px;">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Avaliação</th>
+                                    <th>Referência</th>
+                                    <th>Previsto</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody-eval-comparacao">
+                                <tr>
+                                    <td colspan="4" class="empty-state-cell">
+                                        Carregue uma avaliação real do backend para comparar predições.
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- =====================================================
+             5. SEÇÃO: DATASET MANAGEMENT
+             ===================================================== -->
+        <section id="section-datasets" class="page-section">
+            <!-- Ações de Importação, Exportação e Integridade -->
+            <div class="panel-card">
+                <div class="panel-header">
+                    <h3><i class="fa-solid fa-folder-open"></i> Conjuntos de Dados e Integridade</h3>
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                        <button id="btn-importar-dataset" class="btn-primary" style="height: 36px;">
+                            <i class="fa-solid fa-file-import"></i> Importar CSV / JSON
+                        </button>
+                        <button id="btn-exportar-dataset" class="btn-secondary">
+                            <i class="fa-solid fa-file-export"></i> Exportar Processados
+                        </button>
+                    </div>
+                </div>
+
+                <div class="pipeline-strip">
+                    <div class="pipeline-item">
+                        <span>Dataset Selecionado</span>
+                        <strong id="ds-meta-nome">--</strong>
+                    </div>
+                    <div class="pipeline-item">
+                        <span>Origem dos Dados</span>
+                        <strong id="ds-meta-origem">--</strong>
+                    </div>
+                    <div class="pipeline-item">
+                        <span>Total de Registros</span>
+                        <strong id="ds-meta-registros">--</strong>
+                    </div>
+                    <div class="pipeline-item">
+                        <span>Integridade & Nulos</span>
+                        <strong id="ds-meta-integridade">--</strong>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filtros e Tabela Paginada -->
+            <div class="panel-card">
+                <div class="panel-header">
+                    <h3><i class="fa-solid fa-filter"></i> Explorador de Registros</h3>
+                </div>
+
+                <div class="form-grid" style="margin-bottom: 16px;">
+                    <div class="form-group">
+                        <label for="ds-select-lista">Dataset</label>
+                        <select id="ds-select-lista" class="form-control">
+                            <option value="">Carregando datasets...</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="ds-filtro-app">Aplicativo</label>
+                        <select id="ds-filtro-app" class="form-control">
+                            <option value="all">Todos</option>
+                            <option value="br.com.brainweb.ifood">iFood</option>
+                            <option value="com.grability.rappi">Rappi</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="ds-filtro-sentimento">Sentimento</label>
+                        <select id="ds-filtro-sentimento" class="form-control">
+                            <option value="all">Todos</option>
+                            <option value="positivo">Positivo</option>
+                            <option value="neutro">Neutro</option>
+                            <option value="negativo">Negativo</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="ds-filtro-categoria">Categoria</label>
+                        <select id="ds-filtro-categoria" class="form-control">
+                            <option value="all">Todas</option>
+                            <option value="entrega">Entrega / Logística</option>
+                            <option value="pedido">Qualidade do Pedido</option>
+                            <option value="pagamento">Pagamento / Reembolso</option>
+                            <option value="app">Desempenho do App</option>
+                            <option value="suporte">Atendimento / Suporte</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <button id="btn-filtrar-dataset" class="btn-primary">
+                            <i class="fa-solid fa-magnifying-glass"></i> Consultar
+                        </button>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Avaliação</th>
+                                <th>Aplicativo</th>
+                                <th>Nota</th>
+                                <th>Sentimento</th>
+                                <th>Categoria</th>
+                                <th>Data Coleta</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbody-datasets">
+                            <tr>
+                                <td colspan="7" class="empty-state-cell">
+                                    <i class="fa-solid fa-database"></i>
+                                    Selecione um dataset ou clique em Consultar para carregar registros do PostgreSQL.
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="pagination-bar">
+                    <span id="ds-paginacao-info">Página 1 de -- (0 registros)</span>
+                    <div style="display: flex; gap: 8px;">
+                        <button id="btn-ds-prev" class="btn-secondary btn-sm" disabled>
+                            <i class="fa-solid fa-chevron-left"></i> Anterior
+                        </button>
+                        <button id="btn-ds-next" class="btn-secondary btn-sm" disabled>
+                            Próxima <i class="fa-solid fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
             </div>
         </section>
     </main>
+
+    <!-- =========================================================
+         MODAL DE DETALHES E CORREÇÃO MANUAL (DATA VALIDATION)
+         ========================================================= -->
+    <div id="modal-validacao" class="modal-overlay" role="dialog" aria-modal="true">
+        <div class="modal-card">
+            <div class="panel-header" style="margin-bottom: 0;">
+                <h3><i class="fa-solid fa-pen-to-square"></i> Detalhes e Correção Manual</h3>
+                <button id="btn-fechar-modal" class="btn-secondary btn-sm"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <div class="form-group">
+                <label>Texto Original da Avaliação</label>
+                <div id="modal-texto-original" class="code-preview">--</div>
+            </div>
+
+            <div class="form-group">
+                <label>Saída Bruta / Diagnóstico de Validação</label>
+                <div id="modal-json-bruto" class="code-preview">--</div>
+            </div>
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="modal-sentimento">Sentimento Corrigido</label>
+                    <select id="modal-sentimento" class="form-control">
+                        <option value="positivo">Positivo</option>
+                        <option value="neutro">Neutro</option>
+                        <option value="negativo">Negativo</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="modal-categoria">Categoria Corrigida</label>
+                    <input type="text" id="modal-categoria" class="form-control" placeholder="Ex: Entrega">
+                </div>
+            </div>
+
+            <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 8px;">
+                <button id="btn-modal-rejeitar" class="btn-secondary" style="border-color: #f87171; color: #f87171;">
+                    <i class="fa-solid fa-ban"></i> Rejeitar
+                </button>
+                <button id="btn-modal-salvar" class="btn-primary">
+                    <i class="fa-solid fa-check"></i> Aprovar / Salvar Correção
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- =========================================================
+         JAVASCRIPT MODULAR + INTEGRAÇÃO PYWEBVIEW PRESERVADA
+         ========================================================= -->
     <script>
-        //== Modo escuro ==
-        const body = document.querySelector('body')
-        const btn_dark = document.querySelector('#botao-mode')
-        const sunMoon = document.querySelector('#indicador')
-        const sun = sunMoon.querySelector('i')
+        /* ---------------------------------------------------------
+           1. MODO ESCURO / CLARO (LÓGICA ORIGINAL PRESERVADA)
+           --------------------------------------------------------- */
+        const body = document.querySelector('body');
+        const btn_dark = document.querySelector('#botao-mode');
+        const sunMoon = document.querySelector('#indicador');
+        const sun = sunMoon.querySelector('i');
 
-        btn_dark.addEventListener('click', ()=>{
-            btn_dark.classList.toggle('dark')
-            body.classList.toggle('dark')
-            
-            if(sun.classList.contains('fa-cloud-moon')){
-                sun.classList.remove('fa-cloud-moon')
-                sun.classList.add('fa-sun')
-            }else{
-                sun.classList.remove('fa-sun')
-                sun.classList.add('fa-cloud-moon')
-            }
-        })
+        function atualizarCoresGraficos() {
+            const isLightMode = body.classList.contains('dark');
+            const legendColor = isLightMode ? '#000000' : '#eae4d9';
+            const gridColor = isLightMode ? 'rgba(0, 0, 0, 0.1)' : '#222222';
+            const tickColor = isLightMode ? '#444444' : '#888888';
 
-        //Integração
-
-        const btnifood = document.getElementById('btn_ifood')
-        const btnrappi = document.getElementById('btn_rappi')
-
-        let num1 = document.getElementById('num1_ava')	
-        let num2 = document.getElementById('num2_ava')
-        let num3 = document.getElementById('num3_ava')
-        let num4 = document.getElementById('num4_ava')
-
-        window.addEventListener('pywebviewready', ()=>{
-            async function obter_indicadores(){
-            }
-
-            carregar_indicadores('br.com.brainweb.ifood')
-
-            btnifood.addEventListener('click', ()=>{
-                carregar_indicadores('br.com.brainweb.ifood')
-            })
-
-            btnrappi.addEventListener('click', ()=>{
-                carregar_indicadores('com.grability.rappi')
-            })
-        })
-        async function carregar_indicadores(app_id){
-            const indicadores = await window.pywebview.api.obter_indicadores(app_id)
-            const avaliacoesDia = await window.pywebview.api.obter_avaliacoes_por_dia(app_id)
-
-            num1.textContent = indicadores.total_avaliacoes
-            num2.textContent = indicadores.total_positivas
-            num3.textContent = indicadores.total_negativas
-            num4.textContent = indicadores.nota_media
-
-            graficoPizza.data.datasets[0].data = [indicadores.total_positivas, indicadores.total_neutras, indicadores.total_negativas]
-            graficoPizza.update()
-
-            graficoLinha.data.labels = avaliacoesDia.data
-            graficoLinha.data.datasets[0].data = avaliacoesDia.quantidade
-            graficoLinha.update()
+            [graficoPizza, graficoLinha, graficoCategorias, graficoApps, graficoComparativoModelos, graficoErrosCategoria].forEach(chart => {
+                if (!chart) return;
+                if (chart.options.plugins?.legend?.labels) {
+                    chart.options.plugins.legend.labels.color = legendColor;
+                }
+                if (chart.options.scales?.x) {
+                    chart.options.scales.x.grid.color = gridColor;
+                    chart.options.scales.x.ticks.color = tickColor;
+                }
+                if (chart.options.scales?.y) {
+                    chart.options.scales.y.grid.color = gridColor;
+                    chart.options.scales.y.ticks.color = tickColor;
+                }
+                chart.update();
+            });
         }
 
-        //Gráficos
+        btn_dark.addEventListener('click', () => {
+            btn_dark.classList.toggle('dark');
+            body.classList.toggle('dark');
 
-        const ctx = document.getElementById('meuGrafico');
-
-        const graficoPizza = new Chart(ctx, {
-            type: 'doughnut', 
-            data: {
-                labels: ['Positiva', 'Neutra', 'Negativa'], 
-                datasets: [{
-                    data: [], 
-                    backgroundColor: ['#d4c4a8', '#777777', '#222222'], 
-                    borderWidth: 0 
-                }]
-            },
-            // Adicione esta parte das opções para controlar o tamanho:
-            options: {
-                responsive: true,
-                maintainAspectRatio: false, // Isso desliga a "teimosia" do gráfico de querer ser gigante
-                plugins: {
-                    legend: {
-                        labels: {
-                            color: '#eae4d9' // Já deixa a legenda combinando com seu tema
-                        }
-                    }
-                }
+            if (sun.classList.contains('fa-cloud-moon')) {
+                sun.classList.remove('fa-cloud-moon');
+                sun.classList.add('fa-sun');
+            } else {
+                sun.classList.remove('fa-sun');
+                sun.classList.add('fa-cloud-moon');
             }
+            atualizarCoresGraficos();
         });
 
-        const ctxLinha = document.getElementById('graficoSobeDesce').getContext('2d');
+        /* ---------------------------------------------------------
+           2. NAVEGAÇÃO ENTRE AS 5 SEÇÕES
+           --------------------------------------------------------- */
+        const navItems = document.querySelectorAll('.nav-item');
+        const pageSections = document.querySelectorAll('.page-section');
+        const pageTitle = document.getElementById('page-title');
+        const pageSubtitle = document.getElementById('page-subtitle');
 
-        const graficoLinha = new Chart(ctxLinha, {
-            type: 'line', // É isso que define o estilo "sobe e desce"
+        navItems.forEach(item => {
+            item.addEventListener('click', () => {
+                navItems.forEach(n => n.classList.remove('active'));
+                pageSections.forEach(s => s.classList.remove('active'));
+
+                item.classList.add('active');
+                const targetId = item.getAttribute('data-target');
+                const targetSection = document.getElementById(targetId);
+                if (targetSection) targetSection.classList.add('active');
+
+                pageTitle.textContent = item.getAttribute('data-title');
+                pageSubtitle.textContent = item.getAttribute('data-subtitle');
+            });
+        });
+
+        /* ---------------------------------------------------------
+           3. UTILITÁRIOS DE PONTE SEGURA COM PYWEBVIEW
+           --------------------------------------------------------- */
+        const AppState = {
+            currentAppId: 'br.com.brainweb.ifood',
+            currentPeriodDays: 7,
+            datasetPage: 1,
+            selectedValidationRecord: null
+        };
+
+        async function callBackend(methodName, ...args) {
+            if (window.pywebview && window.pywebview.api && typeof window.pywebview.api[methodName] === 'function') {
+                return await window.pywebview.api[methodName](...args);
+            }
+            return null;
+        }
+
+        function escapeHtml(text) {
+            if (text === null || text === undefined) return '--';
+            return String(text)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;');
+        }
+
+        /* ---------------------------------------------------------
+           4. GRÁFICOS (ORIGINAIS PRESERVADOS + NOVOS DO PIPELINE)
+           --------------------------------------------------------- */
+        const ctx = document.getElementById('meuGrafico');
+        const graficoPizza = new Chart(ctx, {
+            type: 'doughnut',
             data: {
-                // Os dias da semana ou do mês
-                labels: ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'], 
+                labels: ['Positiva', 'Neutra', 'Negativa'],
                 datasets: [{
-                    label: 'Avaliações',
-                    data: [1, 2, 3, 4, 5], // Os valores subindo e descendo
-                    
-                    // Estilo da linha
-                    borderColor: '#d4c4a8', // Cor da linha (bege do SimpleKash)
-                    borderWidth: 3,         // Grossura da linha
-                    
-                    // Estilo das "bolinhas" em cada ponto
-                    pointBackgroundColor: '#000000',
-                    pointBorderColor: '#d4c4a8',
-                    pointBorderWidth: 2,
-                    pointRadius: 5,
-                    pointHoverRadius: 8, // Aumenta a bolinha ao passar o mouse
-                    
-                    // Comportamento da linha
-                    tension: 0.3 // Deixa a linha levemente curvada. Se quiser reta, mude para 0.
+                    data: [],
+                    backgroundColor: ['#d4c4a8', '#777777', '#222222'],
+                    borderWidth: 0
                 }]
             },
             options: {
@@ -437,17 +1837,44 @@
                 plugins: {
                     legend: {
                         labels: {
-                            color: '#eae4d9' // Cor do texto da legenda
+                            color: '#eae4d9'
                         }
+                    }
+                }
+            }
+        });
+
+        const ctxLinha = document.getElementById('graficoSobeDesce').getContext('2d');
+        const graficoLinha = new Chart(ctxLinha, {
+            type: 'line',
+            data: {
+                labels: ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
+                datasets: [{
+                    label: 'Avaliações',
+                    data: [],
+                    borderColor: '#d4c4a8',
+                    borderWidth: 3,
+                    pointBackgroundColor: '#000000',
+                    pointBorderColor: '#d4c4a8',
+                    pointBorderWidth: 2,
+                    pointRadius: 5,
+                    pointHoverRadius: 8,
+                    tension: 0.3
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        labels: { color: '#eae4d9' }
                     }
                 },
                 scales: {
-                    // Configurações do eixo X (horizontal)
                     x: {
-                        grid: { color: '#222222' }, // Cor das linhas de fundo
-                        ticks: { color: '#888888' } // Cor dos dias
+                        grid: { color: '#222222' },
+                        ticks: { color: '#888888' }
                     },
-                    // Configurações do eixo Y (vertical)
                     y: {
                         grid: { color: '#222222' },
                         ticks: { color: '#888888' }
@@ -455,10 +1882,425 @@
                 }
             }
         });
+
+        const graficoCategorias = new Chart(document.getElementById('graficoCategorias'), {
+            type: 'bar',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Avaliações por Categoria',
+                    data: [],
+                    backgroundColor: '#3b82f6',
+                    borderRadius: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { labels: { color: '#eae4d9' } } },
+                scales: {
+                    x: { grid: { color: '#222222' }, ticks: { color: '#888888' } },
+                    y: { grid: { color: '#222222' }, ticks: { color: '#888888' } }
+                }
+            }
+        });
+
+        const graficoApps = new Chart(document.getElementById('graficoApps'), {
+            type: 'bar',
+            data: {
+                labels: ['iFood', 'Rappi'],
+                datasets: [{
+                    label: 'Volume Total Coletado',
+                    data: [],
+                    backgroundColor: ['#d4c4a8', '#3b82f6'],
+                    borderRadius: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { labels: { color: '#eae4d9' } } },
+                scales: {
+                    x: { grid: { color: '#222222' }, ticks: { color: '#888888' } },
+                    y: { grid: { color: '#222222' }, ticks: { color: '#888888' } }
+                }
+            }
+        });
+
+        const graficoComparativoModelos = new Chart(document.getElementById('graficoComparativoModelos'), {
+            type: 'bar',
+            data: {
+                labels: ['Accuracy', 'Precision', 'Recall', 'F1-Score'],
+                datasets: []
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { labels: { color: '#eae4d9' } } },
+                scales: {
+                    x: { grid: { color: '#222222' }, ticks: { color: '#888888' } },
+                    y: { min: 0, max: 1, grid: { color: '#222222' }, ticks: { color: '#888888' } }
+                }
+            }
+        });
+
+        const graficoErrosCategoria = new Chart(document.getElementById('graficoErrosCategoria'), {
+            type: 'bar',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Divergências vs Gold Dataset',
+                    data: [],
+                    backgroundColor: '#dc143c',
+                    borderRadius: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { labels: { color: '#eae4d9' } } },
+                scales: {
+                    x: { grid: { color: '#222222' }, ticks: { color: '#888888' } },
+                    y: { grid: { color: '#222222' }, ticks: { color: '#888888' } }
+                }
+            }
+        });
+
+        /* ---------------------------------------------------------
+           5. INTEGRAÇÃO EXISTENTE + EXTENSÃO DO DASHBOARD
+           --------------------------------------------------------- */
+        const btnifood = document.getElementById('btn_ifood');
+        const btnrappi = document.getElementById('btn_rappi');
+        const selectPeriodo = document.getElementById('select-periodo');
+
+        let num1 = document.getElementById('num1_ava');
+        let num2 = document.getElementById('num2_ava');
+        let num3 = document.getElementById('num3_ava');
+        let num4 = document.getElementById('num4_ava');
+
+        async function carregar_indicadores(app_id) {
+            AppState.currentAppId = app_id;
+
+            // 1) Chamadas originais preservadas
+            const indicadores = await callBackend('obter_indicadores', app_id);
+            const avaliacoesDia = await callBackend('obter_avaliacoes_por_dia', app_id);
+
+            if (indicadores) {
+                num1.textContent = indicadores.total_avaliacoes ?? '--';
+                num2.textContent = indicadores.total_positivas ?? '--';
+                num3.textContent = indicadores.total_negativas ?? '--';
+                num4.textContent = indicadores.nota_media ?? '--';
+
+                graficoPizza.data.datasets[0].data = [
+                    indicadores.total_positivas || 0,
+                    indicadores.total_neutras || 0,
+                    indicadores.total_negativas || 0
+                ];
+                graficoPizza.update();
+            }
+
+            if (avaliacoesDia) {
+                graficoLinha.data.labels = avaliacoesDia.data || [];
+                graficoLinha.data.datasets[0].data = avaliacoesDia.quantidade || [];
+                graficoLinha.update();
+            }
+
+            // 2) Novos indicadores do pipeline (quando implementados no Python)
+            const pipelineResumo = await callBackend('obter_resumo_pipeline', app_id, AppState.currentPeriodDays);
+            if (pipelineResumo) {
+                document.getElementById('dash-ultima-execucao').textContent = pipelineResumo.ultima_execucao || '--';
+                document.getElementById('dash-ultimo-modelo').textContent = pipelineResumo.ultimo_modelo || '--';
+                document.getElementById('dash-resumo-qualidade').textContent = pipelineResumo.resumo_qualidade || '--';
+
+                const statusEl = document.getElementById('dash-status-pipeline');
+                statusEl.textContent = pipelineResumo.status || 'Indisponível';
+                statusEl.className = 'badge ' + (pipelineResumo.status === 'Concluído' ? 'badge-positive' : 'badge-blue');
+
+                document.getElementById('dash-total-coletadas').textContent = pipelineResumo.total_coletadas ?? '--';
+                document.getElementById('dash-total-processadas').textContent = pipelineResumo.total_processadas ?? '--';
+                document.getElementById('dash-total-validados').textContent = pipelineResumo.total_validados ?? '--';
+                document.getElementById('dash-pendentes-revisao').textContent = pipelineResumo.pendentes_revisao ?? '--';
+                document.getElementById('dash-total-classificacoes').textContent = pipelineResumo.total_classificacoes ?? '--';
+
+                if (pipelineResumo.categorias) {
+                    graficoCategorias.data.labels = pipelineResumo.categorias.labels || [];
+                    graficoCategorias.data.datasets[0].data = pipelineResumo.categorias.valores || [];
+                    graficoCategorias.update();
+                }
+
+                if (pipelineResumo.volume_apps) {
+                    graficoApps.data.labels = pipelineResumo.volume_apps.labels || ['iFood', 'Rappi'];
+                    graficoApps.data.datasets[0].data = pipelineResumo.volume_apps.valores || [];
+                    graficoApps.update();
+                }
+            }
+        }
+
+        window.addEventListener('pywebviewready', async () => {
+            const connBadge = document.getElementById('backend-connection-badge');
+            connBadge.className = 'badge badge-positive';
+            connBadge.innerHTML = '<i class="fa-solid fa-circle-check"></i> Python Conectado';
+
+            await carregar_indicadores('br.com.brainweb.ifood');
+            await inicializarModulosBackend();
+        });
+
+        btnifood.addEventListener('click', () => {
+            btnifood.classList.add('app-selected');
+            btnrappi.classList.remove('app-selected');
+            carregar_indicadores('br.com.brainweb.ifood');
+        });
+
+        btnrappi.addEventListener('click', () => {
+            btnrappi.classList.add('app-selected');
+            btnifood.classList.remove('app-selected');
+            carregar_indicadores('com.grability.rappi');
+        });
+
+        selectPeriodo.addEventListener('change', (e) => {
+            AppState.currentPeriodDays = Number(e.target.value);
+            carregar_indicadores(AppState.currentAppId);
+        });
+
+        /* ---------------------------------------------------------
+           6. INICIALIZAÇÃO DOS MÓDULOS DE IA, VALIDAÇÃO, AVALIAÇÃO E DATASETS
+           --------------------------------------------------------- */
+        async function inicializarModulosBackend() {
+            // Popular listas de datasets e modelos disponíveis via Python
+            const datasets = await callBackend('listar_datasets');
+            if (Array.isArray(datasets)) {
+                const optionsHtml = datasets.map(ds =>
+                    `<option value="${escapeHtml(ds.id)}">${escapeHtml(ds.nome)} (${ds.total_registros || 0} reg.)</option>`
+                ).join('');
+                document.getElementById('cls-dataset').innerHTML = optionsHtml || '<option value="">Nenhum dataset disponível</option>';
+                document.getElementById('ds-select-lista').innerHTML = optionsHtml || '<option value="">Nenhum dataset disponível</option>';
+            }
+
+            const modelos = await callBackend('listar_modelos_llm');
+            if (Array.isArray(modelos)) {
+                document.getElementById('cls-modelo').innerHTML = modelos.map(m =>
+                    `<option value="${escapeHtml(m.id)}">${escapeHtml(m.nome)}</option>`
+                ).join('');
+            }
+        }
+
+        // --- AI Classification ---
+        document.getElementById('btn-iniciar-classificacao').addEventListener('click', async () => {
+            const payload = {
+                dataset_id: document.getElementById('cls-dataset').value,
+                app_id: document.getElementById('cls-app').value,
+                modelo: document.getElementById('cls-modelo').value,
+                limite: Number(document.getElementById('cls-quantidade').value) || 50
+            };
+
+            const statusBadge = document.getElementById('cls-status-badge');
+            const feedbackBox = document.getElementById('cls-feedback-box');
+
+            statusBadge.className = 'badge badge-blue';
+            statusBadge.textContent = 'Processando...';
+            feedbackBox.className = 'alert-box info';
+            feedbackBox.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i><span>Executando classificação no backend Python...</span>';
+
+            const resposta = await callBackend('executar_classificacao_llm', payload);
+            if (!resposta) {
+                statusBadge.className = 'badge badge-warning';
+                statusBadge.textContent = 'Aguardando Backend';
+                feedbackBox.className = 'alert-box error';
+                feedbackBox.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i><span>Método <code>executar_classificacao_llm</code> ainda não conectado no backend Python.</span>';
+                return;
+            }
+
+            statusBadge.className = 'badge badge-positive';
+            statusBadge.textContent = 'Concluído';
+            document.getElementById('cls-progress-bar').style.width = '100%';
+            document.getElementById('cls-percentual').textContent = '100%';
+            document.getElementById('cls-qtd-processados').textContent = resposta.processados ?? 0;
+            document.getElementById('cls-qtd-restantes').textContent = resposta.restantes ?? 0;
+            renderizarTabelaClassificacoes(resposta.registros || []);
+        });
+
+        function renderizarTabelaClassificacoes(registros) {
+            const tbody = document.getElementById('tbody-classificacoes');
+            if (!registros.length) {
+                tbody.innerHTML = '<tr><td colspan="7" class="empty-state-cell">Nenhum registro retornado.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = registros.map(r => {
+                const sentClass = r.sentimento === 'positivo' ? 'badge-positive' : (r.sentimento === 'negativo' ? 'badge-negative' : 'badge-neutral');
+                const rowClass = r.precisa_revisao ? 'row-review-needed' : '';
+                return `
+                    <tr class="${rowClass}">
+                        <td class="text-truncate" title="${escapeHtml(r.texto)}">${escapeHtml(r.texto)}</td>
+                        <td>${escapeHtml(r.app)}</td>
+                        <td><span class="badge ${sentClass}">${escapeHtml(r.sentimento)}</span></td>
+                        <td>${escapeHtml(r.categoria)}</td>
+                        <td>${escapeHtml(r.tipo_problema)}</td>
+                        <td>${r.confianca !== null && r.confianca !== undefined ? (r.confianca * 100).toFixed(1) + '%' : 'N/A'}</td>
+                        <td><span class="badge ${r.precisa_revisao ? 'badge-warning' : 'badge-positive'}">${r.precisa_revisao ? 'Revisão' : 'OK'}</span></td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // --- Data Validation ---
+        document.getElementById('btn-carregar-validacao').addEventListener('click', async () => {
+            const filtro = document.getElementById('val-filtro-tipo').value;
+            const dados = await callBackend('obter_registros_validacao', filtro);
+            if (!dados) return;
+
+            document.getElementById('val-aprovados').textContent = dados.aprovados ?? '--';
+            document.getElementById('val-rejeitados').textContent = dados.rejeitados ?? '--';
+            document.getElementById('val-pendentes').textContent = dados.pendentes ?? '--';
+            document.getElementById('val-taxa').textContent = dados.taxa_validacao !== undefined ? `${dados.taxa_validacao}%` : '--';
+
+            const tbody = document.getElementById('tbody-validacao');
+            const lista = dados.registros || [];
+            if (!lista.length) {
+                tbody.innerHTML = '<tr><td colspan="7" class="empty-state-cell">Nenhum registro encontrado para o filtro selecionado.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = lista.map((item, idx) => {
+                const isEstrutural = item.natureza_erro === 'estrutural';
+                const rowClass = isEstrutural ? 'row-structural-error' : (item.status === 'pendente' ? 'row-review-needed' : '');
+                return `
+                    <tr class="${rowClass}">
+                        <td class="text-truncate" title="${escapeHtml(item.texto_original)}">${escapeHtml(item.texto_original)}</td>
+                        <td>${escapeHtml(item.classificacao_ia)}</td>
+                        <td><span class="badge ${isEstrutural ? 'badge-negative' : 'badge-warning'}">${isEstrutural ? 'Erro Estrutural' : 'Semântico'}</span></td>
+                        <td>${escapeHtml(item.resultado)}</td>
+                        <td>${escapeHtml(item.motivo)}</td>
+                        <td>${escapeHtml(item.data_processamento)}</td>
+                        <td>
+                            <button class="btn-secondary btn-sm" onclick='abrirModalValidacao(${JSON.stringify(item).replace(/'/g, "&#39;")})'>
+                                <i class="fa-solid fa-eye"></i> Revisar
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        });
+
+        function abrirModalValidacao(item) {
+            AppState.selectedValidationRecord = item;
+            document.getElementById('modal-texto-original').textContent = item.texto_original || '--';
+            document.getElementById('modal-json-bruto').textContent = item.raw_output || item.motivo || '--';
+            document.getElementById('modal-validacao').classList.add('open');
+        }
+
+        document.getElementById('btn-fechar-modal').addEventListener('click', () => {
+            document.getElementById('modal-validacao').classList.remove('open');
+        });
+
+        document.getElementById('btn-modal-salvar').addEventListener('click', async () => {
+            if (!AppState.selectedValidationRecord) return;
+            await callBackend('resolver_validacao', {
+                id: AppState.selectedValidationRecord.id,
+                acao: 'aprovar',
+                sentimento: document.getElementById('modal-sentimento').value,
+                categoria: document.getElementById('modal-categoria').value
+            });
+            document.getElementById('modal-validacao').classList.remove('open');
+        });
+
+        document.getElementById('btn-modal-rejeitar').addEventListener('click', async () => {
+            if (!AppState.selectedValidationRecord) return;
+            await callBackend('resolver_validacao', {
+                id: AppState.selectedValidationRecord.id,
+                acao: 'rejeitar'
+            });
+            document.getElementById('modal-validacao').classList.remove('open');
+        });
+
+        // --- Model Evaluation ---
+        document.getElementById('btn-carregar-metricas').addEventListener('click', async () => {
+            const modeloId = document.getElementById('eval-modelo-select').value;
+            const res = await callBackend('obter_avaliacao_modelo', modeloId);
+            if (!res) return;
+
+            document.getElementById('eval-meta-modelo').textContent = res.modelo || '--';
+            document.getElementById('eval-meta-qtd').textContent = res.qtd_registros ?? '--';
+            document.getElementById('eval-meta-data').textContent = res.data_avaliacao || '--';
+            document.getElementById('eval-meta-gold').textContent = res.gold_dataset || '--';
+
+            document.getElementById('eval-accuracy').textContent = res.accuracy !== undefined ? (res.accuracy * 100).toFixed(2) + '%' : '--';
+            document.getElementById('eval-precision').textContent = res.precision !== undefined ? (res.precision * 100).toFixed(2) + '%' : '--';
+            document.getElementById('eval-recall').textContent = res.recall !== undefined ? (res.recall * 100).toFixed(2) + '%' : '--';
+            document.getElementById('eval-f1').textContent = res.f1 !== undefined ? (res.f1 * 100).toFixed(2) + '%' : '--';
+
+            if (Array.isArray(res.matriz_confusao) && res.matriz_confusao.length === 3) {
+                for (let i = 0; i < 3; i++) {
+                    for (let j = 0; j < 3; j++) {
+                        document.getElementById(`cm-${i}-${j}`).textContent = res.matriz_confusao[i][j];
+                    }
+                }
+            }
+
+            if (Array.isArray(res.comparativo_modelos)) {
+                graficoComparativoModelos.data.datasets = res.comparativo_modelos.map((m, i) => ({
+                    label: m.nome,
+                    data: [m.accuracy, m.precision, m.recall, m.f1],
+                    backgroundColor: i === 0 ? '#d4c4a8' : '#3b82f6',
+                    borderRadius: 6
+                }));
+                graficoComparativoModelos.update();
+            }
+
+            if (res.erros_categoria) {
+                graficoErrosCategoria.data.labels = res.erros_categoria.labels || [];
+                graficoErrosCategoria.data.datasets[0].data = res.erros_categoria.valores || [];
+                graficoErrosCategoria.update();
+            }
+        });
+
+        // --- Dataset Management ---
+        document.getElementById('btn-importar-dataset').addEventListener('click', () => {
+            callBackend('abrir_dialogo_importacao_dataset');
+        });
+
+        document.getElementById('btn-exportar-dataset').addEventListener('click', () => {
+            const dsId = document.getElementById('ds-select-lista').value;
+            callBackend('exportar_dataset_processado', dsId);
+        });
+
+        document.getElementById('btn-filtrar-dataset').addEventListener('click', async () => {
+            const filtros = {
+                dataset_id: document.getElementById('ds-select-lista').value,
+                app: document.getElementById('ds-filtro-app').value,
+                sentimento: document.getElementById('ds-filtro-sentimento').value,
+                categoria: document.getElementById('ds-filtro-categoria').value,
+                pagina: AppState.datasetPage
+            };
+
+            const res = await callBackend('consultar_registros_dataset', filtros);
+            if (!res) return;
+
+            document.getElementById('ds-meta-nome').textContent = res.nome || '--';
+            document.getElementById('ds-meta-origem').textContent = res.origem || '--';
+            document.getElementById('ds-meta-registros').textContent = res.total_registros ?? '--';
+            document.getElementById('ds-meta-integridade').textContent = res.integridade || '--';
+            document.getElementById('ds-paginacao-info').textContent = `Página ${res.pagina_atual || 1} de ${res.total_paginas || 1} (${res.total_registros || 0} registros)`;
+
+            const tbody = document.getElementById('tbody-datasets');
+            const rows = res.registros || [];
+            if (!rows.length) {
+                tbody.innerHTML = '<tr><td colspan="7" class="empty-state-cell">Nenhum registro encontrado.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = rows.map(r => `
+                <tr>
+                    <td>${escapeHtml(r.id)}</td>
+                    <td class="text-truncate" title="${escapeHtml(r.texto)}">${escapeHtml(r.texto)}</td>
+                    <td>${escapeHtml(r.app)}</td>
+                    <td>${escapeHtml(r.nota)}</td>
+                    <td>${escapeHtml(r.sentimento)}</td>
+                    <td>${escapeHtml(r.categoria)}</td>
+                    <td>${escapeHtml(r.data_coleta)}</td>
+                </tr>
+            `).join('');
+        });
     </script>
-    <!-- Widget Tradutor -->
-    <div class="gtranslate_wrapper"></div>
-    <script>window.gtranslateSettings = {"default_language":"pt","languages":["pt","it","fr","en","es"],"wrapper_selector":".gtranslate_wrapper","alt_flags":{"pt":"brazil"}}</script>
-    <script src="https://cdn.gtranslate.net/widgets/latest/float.js" defer></script>
 </body>
 </html>
