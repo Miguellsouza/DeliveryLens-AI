@@ -1989,7 +1989,7 @@
                 num1.textContent = indicadores.total_avaliacoes ?? '--';
                 num2.textContent = indicadores.total_positivas ?? '--';
                 num3.textContent = indicadores.total_negativas ?? '--';
-                num4.textContent = indicadores.nota_media ?? '--';
+                num4.textContent = indicadores.nota_media.toFixed(2) ?? '--';
 
                 graficoPizza.data.datasets[0].data = [
                     indicadores.total_positivas || 0,
